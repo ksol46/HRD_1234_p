@@ -1,10 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%
-request.setCharacterEncoding("utf-8");
-int custno = 0;
-custno = (Integer)request.getAttribute("custno");
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,16 +9,16 @@ custno = (Integer)request.getAttribute("custno");
 <script type="text/javascript" src="script.js"></script>
 </head>
 <body>
-	<%@ include file="topmenu.jsp" %>
-	<section>
-		<div class="title">홈쇼핑 회원 등록</div>
-		<form name="frm" action="insert">
-			<input type="hidden" id="GUBUN" value="insert">
+<%@ include file="topmenu.jsp" %>
+		<section>
+		<div class="title">홈쇼핑 회원 정보 수정</div>
+		<form name="frm" action="update">
+			<input type="hidden" id="GUBUN" value="update">
 			<div class="wrapper">
-			<table border="1">
+			<table>
 				<tr>
 				<th>회원번호(자동발생)</th>
-				<td><input type="text" name="custno" value="<%=custno%>" readonly></td>
+				<td><input type="text" name="custno" value="" readonly></td>
 				</tr>
 				<tr>
 				<th>회원성명</th>
@@ -59,6 +54,6 @@ custno = (Integer)request.getAttribute("custno");
 			</div>
 		</form>
 	</section>
-	<%@ include file="footer.jsp" %>
+<%@ include file="footer.jsp" %>
 </body>
 </html>

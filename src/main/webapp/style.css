@@ -66,6 +66,19 @@ table {
 	width: 600px;
 }
 
+table, tr, th, td {
+	border: 1px solid black;
+}
+
+.btn {
+	padding: 0.2rem 1rem;
+}
+
+td input {
+	float: left;
+	padding: 0.3rem;
+}
+
 footer {
 	position: fixed;
 	bottom: 0;
