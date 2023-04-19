@@ -156,5 +156,14 @@ public class MemberDAO {
 		return "result.jsp";
 	}
 	
-	public String
+	public String modify (HttpServletRequest request, HttpServletResponse response) {
+		try {
+			conn = getConnection();
+			int custno=Integer.parseInt(request.getParameter("custno"));
+			
+			String sql = "select cust"
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
