@@ -161,9 +161,74 @@ public class MemberDAO {
 			conn = getConnection();
 			int custno=Integer.parseInt(request.getParameter("custno"));
 			
-			String sql = "select cust"
+			String sql = "select custname, phone, address, TO_CHAR(joindate, 'YYYY-MM-DD') joindate, grade, city";
+			sql += "from member_tbl_02 where custno=" + custno;
+			
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+			
+			Member member = new Member();
+			
+			if(rs.next()) {
+				member.setCustno(custno);
+				member.setCustname(rs.getString(1));
+				member.setPhone(rs.getString(2));
+				member.setAddress(rs.getString(3));
+				member.setJoindate(rs.getString(4));
+				member.setGrade(rs.getString(5));
+				member.setCity(rs.getString(6));
+				
+				request.setAttribute("member", member);
+				request.setAttribute("custno", custno);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		return "modify.jsp";
 	}
+	
+	public int update(HttpServletRequest request, HttpServletResponse reponse) {
+		
+		int custno = Integer.parseInt(request.getParameter("custno"));
+		String custname = request.getParameter("custname");
+		String phone = request.getParameter("phone");
+		String address = request.getParameter("address");
+		String joindate = request.getParameter("joindate");
+		String grade = request.getParameter("grade");
+		String city = request.getParameter("city");
+		int result = 0;
+		
+		try {
+			conn = getConnection();
+			String sql = "update member_tbl_02 set";
+			sql +=" custname = ?, ";
+			sql +=" phone = ?, ";
+			sql +=" address = ?, ";
+			sql +=" joindate = to_date(?, 'yyyy-mm-dd'), ";
+			sql +=" grade = ?, ";
+			sql +=" city = ?, ";
+			sql +=" where custno = ?";
+			
+			ps = conn.prepareStatement(sql);
+			
+			ps.setString(1, custname);
+			ps.setString(2, phone);
+			ps.setString(3, address);
+			ps.setString(4, joindate);
+			ps.setString(5, grade);
+			ps.setString(6, city);
+			ps.setInt(7, custno);
+			
+			result = ps.executeUpdate();
+			
+			conn.close();
+			ps.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+}
 }

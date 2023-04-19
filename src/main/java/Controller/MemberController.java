@@ -1,6 +1,8 @@
 package Controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -41,23 +43,45 @@ public class MemberController extends HttpServlet {
 		MemberDAO member = new MemberDAO();
 
 		switch (command) {
-		case "/home" :
+		case "/home":
 			site = "index.jsp";
 			break;
-		case "/insert" :
+		case "/insert":
 			site = member.insert(request, response);
 			break;
-		case "/add" :
+		case "/add":
 			site = member.nextCustno(request, response);
 			break;
-		case "/list" :
+		case "/list":
 			site = member.selectAll(request, response);
 			break;
-		case "/result" :
+		case "/result":
 			site = member.selectResult(request, response);
 			break;
+		case "/modify":
+			site = member.modify(request, response);
+			break;
+		case "/update":
+			int result1 = member.update(request, response);
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+
+			if (result1 == 1) {
+				out.println("<script>");
+				out.println("alert('회원수정이 완료되었습니다!'); location.href='" + context + "';");
+				out.println("</script>");
+				out.flush();
+			} else {
+				out.println("<script>");
+				out.println("alert('회원수정이 실패되었습니다!'); location.href='" + context + "';");
+				out.println("</script>");
+				out.flush();
+			}
+			
+
+			getServletContext().getRequestDispatcher("/" + site).forward(request, response);
 		}
 		
-		getServletContext().getRequestDispatcher("/" + site).forward(request, response);
 	}
+	
 }
