@@ -92,7 +92,7 @@ public class MemberDAO {
 
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
-			
+
 			while (rs.next()) {
 				Member member = new Member();
 				member.setCustno(rs.getInt(1));
@@ -102,74 +102,72 @@ public class MemberDAO {
 				member.setJoindate(rs.getString(5));
 				member.setGrade(rs.getString(6));
 				member.setCity(rs.getString(7));
-				
+
 				list.add(member);
-				
+
 			}
-			
+
 			request.setAttribute("list", list);
-			
+
 			conn.close();
 			ps.close();
 			rs.close();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return "list.jsp";
 	}
-	
+
 	public String selectResult(HttpServletRequest request, HttpServletResponse response) {
 		ArrayList<Money> list = new ArrayList<Money>();
 		try {
 			conn = getConnection();
 			String sql = "select m1.custno, m1.custname, DECODE(grade, 'A', 'VIP', 'B', '일반', '직원') grade, sum(m2.price) price"
-			+ " from member_tbl_02 m1, money_tbl_02 m2"
-			+ " where m1.custno = m2.custno"
-			+ " group by (m1.custno, m1.custname, grade)"
-			+ " order by price desc";
-			
+					+ " from member_tbl_02 m1, money_tbl_02 m2" + " where m1.custno = m2.custno"
+					+ " group by (m1.custno, m1.custname, grade)" + " order by price desc";
+
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				Money money = new Money();
 				money.setCustno(rs.getInt(1));
 				money.setCustname(rs.getString(2));
 				money.setGrade(rs.getString(3));
 				money.setPrice(rs.getInt(4));
-				
+
 				list.add(money);
 			}
-			
+
 			request.setAttribute("list", list);
-			
+
 			conn.close();
 			ps.close();
 			rs.close();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return "result.jsp";
 	}
-	
-	public String modify (HttpServletRequest request, HttpServletResponse response) {
+
+	public String modify(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			conn = getConnection();
-			int custno=Integer.parseInt(request.getParameter("custno"));
-			
+			int custno = Integer.parseInt(request.getParameter("custno"));
+
 			String sql = "select custname, phone, address, TO_CHAR(joindate, 'YYYY-MM-DD') joindate, grade, city";
-			sql += "from member_tbl_02 where custno=" + custno;
-			
+			sql += " from member_tbl_02 where custno=" + custno;
+
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
-			
+
 			Member member = new Member();
-			
-			if(rs.next()) {
+
+			if (rs.next()) {
 				member.setCustno(custno);
 				member.setCustname(rs.getString(1));
 				member.setPhone(rs.getString(2));
@@ -177,20 +175,20 @@ public class MemberDAO {
 				member.setJoindate(rs.getString(4));
 				member.setGrade(rs.getString(5));
 				member.setCity(rs.getString(6));
-				
+
 				request.setAttribute("member", member);
 				request.setAttribute("custno", custno);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return "modify.jsp";
 	}
-	
+
 	public int update(HttpServletRequest request, HttpServletResponse reponse) {
-		
+
 		int custno = Integer.parseInt(request.getParameter("custno"));
 		String custname = request.getParameter("custname");
 		String phone = request.getParameter("phone");
@@ -199,20 +197,20 @@ public class MemberDAO {
 		String grade = request.getParameter("grade");
 		String city = request.getParameter("city");
 		int result = 0;
-		
+
 		try {
 			conn = getConnection();
 			String sql = "update member_tbl_02 set";
-			sql +=" custname = ?, ";
-			sql +=" phone = ?, ";
-			sql +=" address = ?, ";
-			sql +=" joindate = to_date(?, 'yyyy-mm-dd'), ";
-			sql +=" grade = ?, ";
-			sql +=" city = ?, ";
-			sql +=" where custno = ?";
-			
+			sql += " custname = ?, ";
+			sql += " phone = ?, ";
+			sql += " address = ?, ";
+			sql += " joindate = to_date(?, 'yyyy-mm-dd'), ";
+			sql += " grade = ?, ";
+			sql += " city = ?, ";
+			sql += " where custno = ?";
+
 			ps = conn.prepareStatement(sql);
-			
+
 			ps.setString(1, custname);
 			ps.setString(2, phone);
 			ps.setString(3, address);
@@ -220,7 +218,26 @@ public class MemberDAO {
 			ps.setString(5, grade);
 			ps.setString(6, city);
 			ps.setInt(7, custno);
+
+			result = ps.executeUpdate();
+
+			conn.close();
+			ps.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public int delete(HttpServletRequest request, HttpServletResponse response) {
+		int result = 0;
+		try {
+			conn = getConnection();
+			String custno = request.getParameter("custno");
+			String sql = "delete from member_tbl_02 where custno=" + custno;
 			
+			ps = conn.prepareStatement(sql);
 			result = ps.executeUpdate();
 			
 			conn.close();
@@ -230,5 +247,5 @@ public class MemberDAO {
 			e.printStackTrace();
 		}
 		return result;
-}
+	}
 }

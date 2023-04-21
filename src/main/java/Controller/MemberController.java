@@ -77,11 +77,26 @@ public class MemberController extends HttpServlet {
 				out.println("</script>");
 				out.flush();
 			}
+			break;
+		case "/delete":
+			int result2 = member.delete(request, response);
+			response.setContentType("text/html; charset=UTF-8");
+			out = response.getWriter();
 			
-
-			getServletContext().getRequestDispatcher("/" + site).forward(request, response);
+			if(result2 == 1) {
+				out.print("<script>");
+				out.print("alert('회원정보가 삭제되었습니다!'); location.href='" + context + "';");
+				out.print("</script>");
+				out.flush();
+			} else {
+				out.print("<script>");
+				out.print("alert('삭제실패!'); location.href='" + context + "';");
+				out.print("</script>");
+				out.flush();
+			}
+			break;
 		}
-		
+		getServletContext().getRequestDispatcher("/" + site).forward(request, response);
 	}
 	
 }

@@ -51,7 +51,7 @@ m = (Member)request.getAttribute("member");
 				</tr>
 				<tr>
 				<td colspan="2">
-				<button class="btn" type="submit" onclick="fn_submit(); return false;">등록</button>
+				<button class="btn" type="submit" onclick="fn_submit(); return false;">수정</button>
 				<button class="btn" type="button" onclick="location='list'">조회</button>
 				</td>
 				</tr>
